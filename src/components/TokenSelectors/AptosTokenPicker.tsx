@@ -1,4 +1,4 @@
-import { CHAIN_ID_APTOS, isValidAptosType } from "@certusone/wormhole-sdk";
+import { CHAIN_ID_APTOS, isValidAptosType } from "@0xcleon/wormhole-sdk";
 import { formatUnits } from "@ethersproject/units";
 import { useCallback, useMemo, useRef } from "react";
 import { AptosCoinResourceReturn } from "../../hooks/useAptosMetadata";

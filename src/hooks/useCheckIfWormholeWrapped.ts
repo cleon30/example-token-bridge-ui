@@ -21,11 +21,11 @@ import {
   cosmos,
   CHAIN_ID_SUI,
   getOriginalAssetSui,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import {
   getOriginalAssetEth as getOriginalAssetEthNFT,
   getOriginalAssetSol as getOriginalAssetSolNFT,
-} from "@certusone/wormhole-sdk/lib/esm/nft_bridge";
+} from "@0xcleon/wormhole-sdk/lib/esm/nft_bridge";
 import { Connection } from "@solana/web3.js";
 import { LCDClient } from "@terra-money/terra.js";
 import { Algodv2 } from "algosdk";

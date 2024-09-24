@@ -1,4 +1,4 @@
-import { ChainId } from "@certusone/wormhole-sdk";
+import { ChainId } from "@0xcleon/wormhole-sdk";
 
 export type DisableTransfers = boolean | "to" | "from";
 

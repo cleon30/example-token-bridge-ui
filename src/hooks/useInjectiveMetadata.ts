@@ -1,4 +1,4 @@
-import { parseSmartContractStateResponse } from "@certusone/wormhole-sdk";
+import { parseSmartContractStateResponse } from "@0xcleon/wormhole-sdk";
 import { ChainGrpcWasmApi } from "@injectivelabs/sdk-ts";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { DataWrapper } from "../store/helpers";

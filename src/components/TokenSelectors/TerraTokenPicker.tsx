@@ -1,4 +1,4 @@
-import { ChainId, terra, TerraChainId } from "@certusone/wormhole-sdk";
+import { ChainId, terra, TerraChainId } from "@0xcleon/wormhole-sdk";
 import { formatUnits } from "@ethersproject/units";
 import { LCDClient } from "@terra-money/terra.js";
 import { useCallback, useMemo, useRef } from "react";

@@ -15,7 +15,7 @@ import {
   isEVMChain,
   isTerraChain,
   WSOL_ADDRESS,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import {
   Button,
   Checkbox,
@@ -106,12 +106,8 @@ function Redeem() {
   const dispatch = useDispatch();
   const { isReady, statusMessage } = useIsWalletReady(targetChain);
   //TODO better check, probably involving a hook & the VAA
-  const isEthNative =
-    targetChain === CHAIN_ID_ETH &&
-    targetAsset &&
-    targetAsset.toLowerCase() === WETH_ADDRESS.toLowerCase();
   const isSepoliaEthNative =
-    targetChain === CHAIN_ID_SEPOLIA &&
+    (targetChain === CHAIN_ID_SEPOLIA || targetChain === CHAIN_ID_ETH) &&
     targetAsset &&
     targetAsset.toLowerCase() === WETH_ADDRESS_SEPOLIA.toLowerCase();
   const isBscNative =
@@ -151,7 +147,6 @@ function Redeem() {
     targetAsset &&
     targetAsset === WSOL_ADDRESS;
   const isNativeEligible =
-    isEthNative ||
     isSepoliaEthNative ||
     isBscNative ||
     isPolygonNative ||

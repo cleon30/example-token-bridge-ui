@@ -12,8 +12,8 @@ import {
   coalesceCosmWasmChainId,
   hexToUint8Array,
   isTerraChain,
-} from "@certusone/wormhole-sdk";
-import { isNativeDenom } from "@certusone/wormhole-sdk/lib/esm/terra";
+} from "@0xcleon/wormhole-sdk";
+import { isNativeDenom } from "@0xcleon/wormhole-sdk/lib/esm/terra";
 import { getCosmWasmClient, getQueryClient } from "@sei-js/core";
 import { keccak256 } from "ethers/lib/utils";
 import { fromUint8Array } from "js-base64";

@@ -1,4 +1,4 @@
-import { cosmos, isNativeDenomInjective } from "@certusone/wormhole-sdk";
+import { cosmos, isNativeDenomInjective } from "@0xcleon/wormhole-sdk";
 import {
   ChainGrpcBankApi,
   ChainGrpcWasmApi,

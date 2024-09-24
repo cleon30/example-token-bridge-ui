@@ -27,7 +27,7 @@ import {
   WSOL_DECIMALS,
   CHAIN_ID_SEI,
   CHAIN_ID_SUI,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { Dispatch } from "@reduxjs/toolkit";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import {

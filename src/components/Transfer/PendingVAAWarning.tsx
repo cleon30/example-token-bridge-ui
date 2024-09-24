@@ -1,4 +1,4 @@
-import { ChainId } from "@certusone/wormhole-sdk";
+import { ChainId } from "@0xcleon/wormhole-sdk";
 import { Link, makeStyles } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { CHAINS_BY_ID } from "../../utils/consts";

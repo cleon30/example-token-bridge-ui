@@ -1,4 +1,4 @@
-import { isTerraChain } from "@certusone/wormhole-sdk";
+import { isTerraChain } from "@0xcleon/wormhole-sdk";
 import { useSelector } from "react-redux";
 import { useHandleNFTRedeem } from "../../hooks/useHandleNFTRedeem";
 import useIsWalletReady from "../../hooks/useIsWalletReady";

@@ -1,4 +1,4 @@
-import { CHAIN_ID_APTOS } from "@certusone/wormhole-sdk";
+import { CHAIN_ID_APTOS } from "@0xcleon/wormhole-sdk";
 import { AptosClient, Types } from "aptos";
 import { hexZeroPad } from "ethers/lib/utils";
 import { APTOS_URL, getBridgeAddressForChain } from "./consts";

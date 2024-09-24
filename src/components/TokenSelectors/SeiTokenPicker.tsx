@@ -1,4 +1,4 @@
-import { CHAIN_ID_SEI, ChainId, cosmos } from "@certusone/wormhole-sdk";
+import { CHAIN_ID_SEI, ChainId, cosmos } from "@0xcleon/wormhole-sdk";
 import { useCallback, useRef } from "react";
 import useIsWalletReady from "../../hooks/useIsWalletReady";
 import useSeiNativeBalances from "../../hooks/useSeiNativeBalances";

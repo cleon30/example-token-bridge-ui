@@ -6,7 +6,7 @@ import {
   XPLA_LCD_CLIENT_CONFIG,
   XPLA_NATIVE_DENOM,
 } from "./consts";
-import { cosmos, isNativeDenomXpla } from "@certusone/wormhole-sdk";
+import { cosmos, isNativeDenomXpla } from "@0xcleon/wormhole-sdk";
 
 export const NATIVE_XPLA_DECIMALS = 18;
 

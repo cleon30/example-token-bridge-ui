@@ -12,7 +12,7 @@ import { setTerraFeeDenom } from "../store/feeSlice";
 import { selectTerraFeeDenom } from "../store/selectors";
 import useTerraNativeBalances from "../hooks/useTerraNativeBalances";
 import { formatNativeDenom, getNativeTerraIcon } from "../utils/terra";
-import { TerraChainId } from "@certusone/wormhole-sdk";
+import { TerraChainId } from "@0xcleon/wormhole-sdk";
 
 const useStyles = makeStyles((theme) => ({
   feePickerContainer: {

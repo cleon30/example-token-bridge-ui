@@ -33,7 +33,7 @@ import {
   TerraChainId,
   CHAIN_ID_SEI,
   cosmos,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { clusterApiUrl } from "@solana/web3.js";
 import { getAddress } from "ethers/lib/utils";
 import { CHAIN_CONFIG_MAP } from "../config";
@@ -405,9 +405,7 @@ export const getExplorerName = (chainId: ChainId) =>
 export const WORMHOLE_RPC_HOSTS =
   CLUSTER === "testnet"
     ? [
-        "https://guardian-01.testnet.xlabs.xyz",
-        "https://guardian-02.testnet.xlabs.xyz",
-        "https://wormhole-v2-testnet-api.certus.one",
+        'http://149.255.32.166:8181',
       ]
     : ["http://localhost:7071"];
 export const ETH_NETWORK_CHAIN_ID = CLUSTER === "testnet" ? 5 : 1337;
@@ -428,9 +426,10 @@ export const ARBITRUM_NETWORK_CHAIN_ID = CLUSTER === "testnet" ? 421613 : 1381;
 export const MOONBEAM_NETWORK_CHAIN_ID = CLUSTER === "testnet" ? 1287 : 1381;
 export const BASE_NETWORK_CHAIN_ID = CLUSTER === "testnet" ? 84531 : 1381;
 export const OPTIMISM_NETWORK_CHAIN_ID = CLUSTER === "testnet" ? 420 : 1381;
+
 export const getEvmChainId = (chainId: ChainId) =>
   chainId === CHAIN_ID_ETH
-    ? ETH_NETWORK_CHAIN_ID
+    ? SEPOLIA_NETWORK_CHAIN_ID
     : chainId === CHAIN_ID_SEPOLIA
     ? SEPOLIA_NETWORK_CHAIN_ID
     : chainId === CHAIN_ID_BSC
@@ -464,10 +463,11 @@ export const getEvmChainId = (chainId: ChainId) =>
     : chainId === CHAIN_ID_OPTIMISM
     ? OPTIMISM_NETWORK_CHAIN_ID
     : undefined;
+    
 export const SOLANA_HOST = process.env.REACT_APP_SOLANA_API_URL
   ? process.env.REACT_APP_SOLANA_API_URL
   : CLUSTER === "testnet"
-  ? clusterApiUrl("devnet")
+  ? clusterApiUrl("testnet")
   : "http://localhost:8899";
 
 export const getTerraConfig = (chainId: TerraChainId) => {
@@ -559,13 +559,11 @@ export const TERRA_TEST_TOKEN_ADDRESS =
 
 export const ALGORAND_WAIT_FOR_CONFIRMATIONS = CLUSTER === "testnet" ? 4 : 1;
 
-export const SOL_BRIDGE_ADDRESS =
-  CONTRACTS[CLUSTER === "testnet" ? "TESTNET" : "DEVNET"].solana.core;
+export const SOL_BRIDGE_ADDRESS = "7i2fnT7B9SStzfEhQTgFcT3jcQd7dnNAT9LNw7b6eBjW";
 
 export const SOL_NFT_BRIDGE_ADDRESS =
   CONTRACTS[CLUSTER === "testnet" ? "TESTNET" : "DEVNET"].solana.nft_bridge;
-export const SOL_TOKEN_BRIDGE_ADDRESS =
-  CONTRACTS[CLUSTER === "testnet" ? "TESTNET" : "DEVNET"].solana.token_bridge;
+export const SOL_TOKEN_BRIDGE_ADDRESS = "BcjwvkozfKY9tNcnmr67RePcz6DQp3pS1c24BzohR5cx";
 
 export const ALGORAND_BRIDGE_ID = BigInt(
   CONTRACTS[CLUSTER === "testnet" ? "TESTNET" : "DEVNET"].algorand.core
@@ -581,17 +579,13 @@ export const NEAR_TOKEN_BRIDGE_ACCOUNT =
   CLUSTER === "testnet" ? "token.wormhole.testnet" : "token.test.near";
 
 export const getBridgeAddressForChain = (chainId: ChainId) =>
-  CONTRACTS[CLUSTER === "testnet" ? "TESTNET" : "DEVNET"][
-    coalesceChainName(chainId)
-  ].core || "";
+"0x8dae55FBbb5893EEe2c9f460FA0fef62e37be074";
 export const getNFTBridgeAddressForChain = (chainId: ChainId) =>
   CONTRACTS[CLUSTER === "testnet" ? "TESTNET" : "DEVNET"][
     coalesceChainName(chainId)
   ].nft_bridge || "";
 export const getTokenBridgeAddressForChain = (chainId: ChainId) =>
-  CONTRACTS[CLUSTER === "testnet" ? "TESTNET" : "DEVNET"][
-    coalesceChainName(chainId)
-  ].token_bridge || "";
+  "0x14DbfE20C520Af95a1d6D36B87C95D794947246E";
 
 export const COVALENT_API_KEY = process.env.REACT_APP_COVALENT_API_KEY
   ? process.env.REACT_APP_COVALENT_API_KEY
@@ -782,32 +776,10 @@ export const TERRA_TOKEN_METADATA_URL =
 
 // hardcoded addresses for warnings
 export const SOLANA_TOKENS_THAT_EXIST_ELSEWHERE = [
-  "SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt", //  SRM
-  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
-  "kinXdEcpDQeHPEuQnqmUgtYykqKGVFq6CeVX5iAHJq6", //  KIN
-  "CDJWUqTcYTVAKXAVXoQZFes5JUFc7owSeq7eMQcDSbo5", // renBTC
-  "8wv2KAykQstNAj2oW6AHANGBiFKVFhvMiyyzzjhkmGvE", // renLUNA
-  "G1a6jxYz3m8DVyMqYnuV7s86wD4fvuXYneWSpLJkmsXj", // renBCH
-  "FKJvvVJ242tX7zFtzTmzqoA631LqHh4CdgcN8dcfFSju", // renDGB
-  "ArUkYE2XDKzqy77PRRGjo4wREWwqk6RXTfM9NeqzPvjU", // renDOGE
-  "E99CQ2gFMmbiyK2bwiaFNWUUmwz4r8k2CVEFxwuvQ7ue", // renZEC
-  "De2bU64vsXKU9jq4bCjeDxNRGPn8nr3euaTK8jBYmD3J", // renFIL
-  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", // USDT
 ];
 export const ETH_TOKENS_THAT_EXIST_ELSEWHERE = [
-  getAddress("0x476c5E26a75bd202a9683ffD34359C0CC15be0fF"), // SRM
-  getAddress("0x818fc6c2ec5986bc6e2cbf00939d90556ab12ce5"), // KIN
-  getAddress("0xeb4c2781e4eba804ce9a9803c67d0893436bb27d"), // renBTC
-  getAddress("0x52d87F22192131636F93c5AB18d0127Ea52CB641"), // renLUNA
-  getAddress("0x459086f2376525bdceba5bdda135e4e9d3fef5bf"), // renBCH
-  getAddress("0xe3cb486f3f5c639e98ccbaf57d95369375687f80"), // renDGB
-  getAddress("0x3832d2F059E55934220881F831bE501D180671A7"), // renDOGE
-  getAddress("0x1c5db575e2ff833e46a2e9864c22f4b22e0b37c2"), // renZEC
-  getAddress("0xD5147bc8e386d91Cc5DBE72099DAC6C9b99276F5"), // renFIL
 ];
 export const ETH_TOKENS_THAT_CAN_BE_SWAPPED_ON_SOLANA = [
-  getAddress("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"), // USDC
-  getAddress("0xdac17f958d2ee523a2206206994597c13d831ec7"), // USDT
 ];
 export const BSC_MARKET_WARNINGS = [
   getAddress(WBNB_ADDRESS),

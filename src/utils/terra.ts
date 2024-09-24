@@ -3,7 +3,7 @@ import {
   CHAIN_ID_TERRA2,
   TerraChainId,
   terra,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { formatUnits } from "@ethersproject/units";
 import { LCDClient, isTxError } from "@terra-money/terra.js";
 import { ConnectedWallet, TxResult } from "@terra-money/wallet-provider";

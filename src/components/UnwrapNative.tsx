@@ -8,7 +8,7 @@ import {
   CHAIN_ID_OASIS,
   CHAIN_ID_POLYGON,
   ethers_contracts,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import {
   Container,
   ListItemIcon,

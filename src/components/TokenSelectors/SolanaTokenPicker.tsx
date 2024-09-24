@@ -1,4 +1,4 @@
-import { CHAIN_ID_SOLANA } from "@certusone/wormhole-sdk";
+import { CHAIN_ID_SOLANA } from "@0xcleon/wormhole-sdk";
 import { TokenInfo } from "@solana/spl-token-registry";
 import { useCallback, useMemo } from "react";
 import useMetaplexData from "../../hooks/useMetaplexData";

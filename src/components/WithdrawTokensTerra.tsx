@@ -28,7 +28,7 @@ import { useSelector } from "react-redux";
 import { selectTerraFeeDenom } from "../store/selectors";
 import TerraFeeDenomPicker from "./TerraFeeDenomPicker";
 import HeaderText from "./HeaderText";
-import { CHAIN_ID_TERRA } from "@certusone/wormhole-sdk";
+import { CHAIN_ID_TERRA } from "@0xcleon/wormhole-sdk";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {

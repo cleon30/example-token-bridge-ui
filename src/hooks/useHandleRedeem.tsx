@@ -26,8 +26,8 @@ import {
   redeemOnTerra,
   redeemOnXpla,
   uint8ArrayToHex,
-} from "@certusone/wormhole-sdk";
-import { completeTransferAndRegister } from "@certusone/wormhole-sdk/lib/esm/aptos/api/tokenBridge";
+} from "@0xcleon/wormhole-sdk";
+import { completeTransferAndRegister } from "@0xcleon/wormhole-sdk/lib/esm/aptos/api/tokenBridge";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { calculateFee } from "@cosmjs/stargate";
 import { WalletStrategy } from "@injectivelabs/wallet-ts";
@@ -188,24 +188,36 @@ async function evm(
 ) {
   dispatch(setIsRedeeming(true));
   try {
+    console.log("EVM Redeem - Chain ID:", chainId);
+    console.log("EVM Redeem - Signed VAA:", uint8ArrayToHex(signedVAA));
+    console.log("EVM Redeem - Is Native:", isNative);
+
+    const tokenBridgeAddress = getTokenBridgeAddressForChain(chainId);
+    console.log("EVM Redeem - Token Bridge Address:", tokenBridgeAddress);
+
     // Klaytn requires specifying gasPrice
     const overrides =
       chainId === CHAIN_ID_KLAYTN
         ? { gasPrice: (await signer.getGasPrice()).toString() }
         : {};
+    console.log("EVM Redeem - Overrides:", overrides);
+
     const receipt = isNative
       ? await redeemOnEthNative(
-          getTokenBridgeAddressForChain(chainId),
+          tokenBridgeAddress,
           signer,
           signedVAA,
           overrides
         )
       : await redeemOnEth(
-          getTokenBridgeAddressForChain(chainId),
+          tokenBridgeAddress,
           signer,
           signedVAA,
           overrides
         );
+    
+    console.log("EVM Redeem - Transaction Receipt:", receipt);
+
     dispatch(
       setRedeemTx({ id: receipt.transactionHash, block: receipt.blockNumber })
     );
@@ -213,6 +225,7 @@ async function evm(
       content: <Alert severity="success">Transaction confirmed</Alert>,
     });
   } catch (e) {
+    console.error("EVM Redeem Error:", e);
     enqueueSnackbar(null, {
       content: <Alert severity="error">{parseError(e)}</Alert>,
     });
@@ -496,7 +509,6 @@ async function sui(
     dispatch(setIsRedeeming(false));
   }
 }
-
 export function useHandleRedeem() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -519,8 +531,18 @@ export function useHandleRedeem() {
   const suiWallet = useWallet();
   const signedVAA = useTransferSignedVAA();
   const isRedeeming = useSelector(selectTransferIsRedeeming);
+
+  console.log("useHandleRedeem - Target Chain:", targetChain);
+  console.log("useHandleRedeem - Signed VAA:", signedVAA ? uint8ArrayToHex(signedVAA) : "null");
+  console.log("useHandleRedeem - Is EVM Chain:", isEVMChain(targetChain));
+  console.log("useHandleRedeem - Signer:", !!signer);
+
   const handleRedeemClick = useCallback(() => {
+    console.log("Handle Redeem Click - Target Chain:", targetChain);
+    console.log("Handle Redeem Click - Signed VAA:", signedVAA ? uint8ArrayToHex(signedVAA) : "null");
+
     if (isEVMChain(targetChain) && !!signer && signedVAA) {
+      console.log("Initiating EVM redeem");
       evm(dispatch, enqueueSnackbar, signer, signedVAA, false, targetChain);
     } else if (
       targetChain === CHAIN_ID_SOLANA &&
@@ -528,6 +550,7 @@ export function useHandleRedeem() {
       !!solPK &&
       signedVAA
     ) {
+      console.log("Initiating Solana redeem");
       solana(
         dispatch,
         enqueueSnackbar,
@@ -537,6 +560,7 @@ export function useHandleRedeem() {
         false
       );
     } else if (isTerraChain(targetChain) && !!terraWallet && signedVAA) {
+      console.log("Initiating Terra redeem");
       terra(
         dispatch,
         enqueueSnackbar,
@@ -546,14 +570,17 @@ export function useHandleRedeem() {
         targetChain
       );
     } else if (targetChain === CHAIN_ID_XPLA && !!xplaWallet && signedVAA) {
+      console.log("Initiating XPLA redeem");
       xpla(dispatch, enqueueSnackbar, xplaWallet, signedVAA);
     } else if (targetChain === CHAIN_ID_APTOS && !!aptosAddress && signedVAA) {
+      console.log("Initiating Aptos redeem");
       aptos(dispatch, enqueueSnackbar, signedVAA, signAndSubmitTransaction);
     } else if (
       targetChain === CHAIN_ID_ALGORAND &&
       algoAccounts[0] &&
       !!signedVAA
     ) {
+      console.log("Initiating Algorand redeem");
       algo(dispatch, enqueueSnackbar, algoAccounts[0]?.address, signedVAA);
     } else if (
       targetChain === CHAIN_ID_INJECTIVE &&
@@ -561,6 +588,7 @@ export function useHandleRedeem() {
       injAddress &&
       signedVAA
     ) {
+      console.log("Initiating Injective redeem");
       injective(dispatch, enqueueSnackbar, injWallet, injAddress, signedVAA);
     } else if (
       targetChain === CHAIN_ID_SEI &&
@@ -568,6 +596,7 @@ export function useHandleRedeem() {
       seiAddress &&
       signedVAA
     ) {
+      console.log("Initiating Sei redeem");
       sei(
         dispatch,
         enqueueSnackbar,
@@ -581,13 +610,17 @@ export function useHandleRedeem() {
       wallet &&
       !!signedVAA
     ) {
+      console.log("Initiating NEAR redeem");
       near(dispatch, enqueueSnackbar, nearAccountId, signedVAA, wallet);
     } else if (
       targetChain === CHAIN_ID_SUI &&
       suiWallet.address &&
       !!signedVAA
     ) {
+      console.log("Initiating Sui redeem");
       sui(dispatch, enqueueSnackbar, suiWallet, signedVAA);
+    } else {
+      console.log("Conditions not met for any redeem operation");
     }
   }, [
     dispatch,
@@ -613,8 +646,11 @@ export function useHandleRedeem() {
   ]);
 
   const handleRedeemNativeClick = useCallback(() => {
-    console.log(targetChain, suiWallet.address, !!signedVAA);
+    console.log("Handle Redeem Native Click - Target Chain:", targetChain);
+    console.log("Handle Redeem Native Click - Signed VAA:", signedVAA ? uint8ArrayToHex(signedVAA) : "null");
+
     if (isEVMChain(targetChain) && !!signer && signedVAA) {
+      console.log("Initiating EVM native redeem");
       evm(dispatch, enqueueSnackbar, signer, signedVAA, true, targetChain);
     } else if (
       targetChain === CHAIN_ID_SOLANA &&
@@ -622,6 +658,7 @@ export function useHandleRedeem() {
       !!solPK &&
       signedVAA
     ) {
+      console.log("Initiating Solana native redeem");
       solana(
         dispatch,
         enqueueSnackbar,
@@ -631,6 +668,7 @@ export function useHandleRedeem() {
         true
       );
     } else if (isTerraChain(targetChain) && !!terraWallet && signedVAA) {
+      console.log("Initiating Terra native redeem");
       terra(
         dispatch,
         enqueueSnackbar,
@@ -638,12 +676,13 @@ export function useHandleRedeem() {
         signedVAA,
         terraFeeDenom,
         targetChain
-      ); //TODO isNative = true
+      );
     } else if (
       targetChain === CHAIN_ID_ALGORAND &&
       algoAccounts[0] &&
       !!signedVAA
     ) {
+      console.log("Initiating Algorand native redeem");
       algo(dispatch, enqueueSnackbar, algoAccounts[0]?.address, signedVAA);
     } else if (
       targetChain === CHAIN_ID_INJECTIVE &&
@@ -651,6 +690,7 @@ export function useHandleRedeem() {
       injAddress &&
       signedVAA
     ) {
+      console.log("Initiating Injective native redeem");
       injective(dispatch, enqueueSnackbar, injWallet, injAddress, signedVAA);
     } else if (
       targetChain === CHAIN_ID_SEI &&
@@ -658,6 +698,7 @@ export function useHandleRedeem() {
       seiAddress &&
       signedVAA
     ) {
+      console.log("Initiating Sei native redeem");
       sei(
         dispatch,
         enqueueSnackbar,
@@ -666,7 +707,10 @@ export function useHandleRedeem() {
         signedVAA
       );
     } else if (targetChain === CHAIN_ID_SUI && suiWallet.address && signedVAA) {
+      console.log("Initiating Sui native redeem");
       sui(dispatch, enqueueSnackbar, suiWallet, signedVAA);
+    } else {
+      console.log("Conditions not met for any native redeem operation");
     }
   }, [
     dispatch,
@@ -687,15 +731,24 @@ export function useHandleRedeem() {
   ]);
 
   const handleAcalaRelayerRedeemClick = useCallback(async () => {
-    if (!signedVAA) return;
+    console.log("Handle Acala Relayer Redeem Click - Target Chain:", targetChain);
+    console.log("Handle Acala Relayer Redeem Click - Signed VAA:", signedVAA ? uint8ArrayToHex(signedVAA) : "null");
+
+    if (!signedVAA) {
+      console.log("Acala Relayer Redeem: No signed VAA available");
+      return;
+    }
 
     dispatch(setIsRedeeming(true));
 
     try {
+      console.log("Initiating Acala Relayer redeem");
       const res = await axios.post(ACALA_RELAY_URL, {
         targetChain,
         signedVAA: uint8ArrayToHex(signedVAA),
       });
+
+      console.log("Acala Relayer Response:", res.data);
 
       dispatch(
         setRedeemTx({
@@ -707,6 +760,7 @@ export function useHandleRedeem() {
         content: <Alert severity="success">Transaction confirmed</Alert>,
       });
     } catch (e) {
+      console.error("Acala Relayer Redeem Error:", e);
       enqueueSnackbar(null, {
         content: <Alert severity="error">{parseError(e)}</Alert>,
       });
@@ -724,9 +778,9 @@ export function useHandleRedeem() {
     }),
     [
       handleRedeemClick,
-      isRedeeming,
       handleRedeemNativeClick,
       handleAcalaRelayerRedeemClick,
+      isRedeeming,
     ]
   );
 }

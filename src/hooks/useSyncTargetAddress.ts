@@ -11,7 +11,7 @@ import {
   CHAIN_ID_INJECTIVE,
   CHAIN_ID_SEI,
   CHAIN_ID_SUI,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { arrayify, zeroPad } from "@ethersproject/bytes";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,

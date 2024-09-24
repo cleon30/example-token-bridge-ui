@@ -1,4 +1,4 @@
-import { isTerraChain } from "@certusone/wormhole-sdk";
+import { isTerraChain } from "@0xcleon/wormhole-sdk";
 import { CircularProgress, makeStyles } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import useFetchForeignAsset from "../../hooks/useFetchForeignAsset";

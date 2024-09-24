@@ -18,7 +18,7 @@ import {
   getIsTransferCompletedXpla,
   isEVMChain,
   isTerraChain,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { Connection } from "@solana/web3.js";
 import { LCDClient } from "@terra-money/terra.js";
 import { LCDClient as XplaLCDClient } from "@xpla/xpla.js";
@@ -143,7 +143,6 @@ export default function useGetIsTransferCompleted(
               getTokenBridgeAddressForChain(targetChain),
               signedVAA,
               lcdClient,
-              getTerraGasPricesUrl(targetChain)
             );
           } catch (error) {
             console.error(error);

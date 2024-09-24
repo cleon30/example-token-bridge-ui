@@ -1,4 +1,4 @@
-import { ChainId, ethers_contracts } from "@certusone/wormhole-sdk";
+import { ChainId, ethers_contracts } from "@0xcleon/wormhole-sdk";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useEthereumProvider } from "../../contexts/EthereumProviderContext";

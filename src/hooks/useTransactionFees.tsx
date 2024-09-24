@@ -5,7 +5,7 @@ import {
   isEVMChain,
   isTerraChain,
   TerraChainId,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { Provider } from "@ethersproject/abstract-provider";
 import { formatUnits } from "@ethersproject/units";
 import { Typography } from "@material-ui/core";

@@ -1,4 +1,4 @@
-import { TerraChainId } from "@certusone/wormhole-sdk";
+import { TerraChainId } from "@0xcleon/wormhole-sdk";
 import { LCDClient } from "@terra-money/terra.js";
 import { MutableRefObject, useEffect, useMemo, useState } from "react";
 import { getTerraConfig } from "../utils/consts";

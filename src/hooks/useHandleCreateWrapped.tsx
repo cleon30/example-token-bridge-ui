@@ -32,7 +32,7 @@ import {
   updateWrappedOnSolana,
   updateWrappedOnTerra,
   updateWrappedOnXpla,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { calculateFee } from "@cosmjs/stargate";
 import { WalletStrategy } from "@injectivelabs/wallet-ts";
@@ -115,7 +115,8 @@ import { sleep } from "../utils/sleep";
 import {
   getPackageId,
   getWrappedCoinType,
-} from "@certusone/wormhole-sdk/lib/cjs/sui";
+} from "@0xcleon/wormhole-sdk/lib/cjs/sui";
+import { ethers } from "ethers";
 
 // TODO: replace with SDK method
 export async function updateWrappedOnSui(
@@ -259,7 +260,6 @@ async function aptos(
     dispatch(setIsCreating(false));
   }
 }
-
 async function evm(
   dispatch: any,
   enqueueSnackbar: any,
@@ -268,38 +268,80 @@ async function evm(
   chainId: ChainId,
   shouldUpdate: boolean
 ) {
+  console.log("Starting EVM create wrapped process");
+  console.log("Chain ID:", chainId);
+  console.log("Should Update:", shouldUpdate);
+
   dispatch(setIsCreating(true));
   try {
-    // Karura and Acala need gas params for contract deploys
-    // Klaytn requires specifying gasPrice
-    const overrides =
-      chainId === CHAIN_ID_KARURA
-        ? await getKaruraGasParams(KARURA_HOST)
-        : chainId === CHAIN_ID_ACALA
-        ? await getKaruraGasParams(ACALA_HOST)
-        : chainId === CHAIN_ID_KLAYTN
-        ? { gasPrice: (await signer.getGasPrice()).toString() }
-        : {};
+    console.log("Preparing overrides");
+    let overrides = {};
+    if (chainId === CHAIN_ID_KARURA) {
+      console.log("Getting Karura gas params");
+      overrides = await getKaruraGasParams(KARURA_HOST);
+    } else if (chainId === CHAIN_ID_ACALA) {
+      console.log("Getting Acala gas params");
+      overrides = await getKaruraGasParams(ACALA_HOST);
+    } else if (chainId === CHAIN_ID_KLAYTN) {
+      console.log("Getting Klaytn gas price");
+      overrides = {
+        gasLimit: ethers.utils.hexlify(1000000), // Example gas limit
+      };
+    }
+    console.log("Overrides:", overrides);
+
+    const tokenBridgeAddress = getTokenBridgeAddressForChain(chainId);
+    console.log("Token Bridge Address:", tokenBridgeAddress);
+
+    console.log("Executing contract method");
     const receipt = shouldUpdate
       ? await updateWrappedOnEth(
-          getTokenBridgeAddressForChain(chainId),
+          tokenBridgeAddress,
           signer,
           signedVAA,
           overrides
         )
       : await createWrappedOnEth(
-          getTokenBridgeAddressForChain(chainId),
+          tokenBridgeAddress,
           signer,
           signedVAA,
           overrides
         );
+    console.log("Transaction receipt:", receipt);
+
     dispatch(
       setCreateTx({ id: receipt.transactionHash, block: receipt.blockNumber })
     );
+    console.log("Dispatched setCreateTx");
+
     enqueueSnackbar(null, {
       content: <Alert severity="success">Transaction confirmed</Alert>,
     });
-  } catch (e) {
+  } catch (e: any) {
+    console.error("Error in EVM create wrapped process:", e);
+
+    // Log detailed error information
+    if (e.error) {
+      console.error("Transaction error:", e.error);
+    }
+    if (e.transaction) {
+      console.error("Transaction data:", e.transaction);
+    }
+    
+    // If there's revert data, try to decode it
+    if (e.error && e.error.data) {
+      try {
+        const revertReason = ethers.utils.toUtf8String(e.error.data);
+        console.error("Revert reason:", revertReason);
+      } catch (decodingError) {
+        console.error("Failed to decode revert reason:", decodingError);
+      }
+    }
+
+    // Fallback error message
+    console.error("Error details:", JSON.stringify(e, null, 2));
+
+    // Show an error notification with the parsed error message
     enqueueSnackbar(null, {
       content: <Alert severity="error">{parseError(e)}</Alert>,
     });
@@ -339,21 +381,23 @@ async function near(
     dispatch(setIsCreating(false));
   }
 }
-
 async function solana(
   dispatch: any,
   enqueueSnackbar: any,
   wallet: WalletContextState,
-  payerAddress: string, // TODO: we may not need this since we have wallet
+  payerAddress: string,
   signedVAA: Uint8Array,
   shouldUpdate: boolean
 ) {
+  console.log("Starting Solana create wrapped process");
+  console.log("Payer Address:", payerAddress);
   dispatch(setIsCreating(true));
   try {
     if (!wallet.signTransaction) {
       throw new Error("wallet.signTransaction is undefined");
     }
     const connection = new Connection(SOLANA_HOST, "confirmed");
+    console.log("Posting VAA to Solana");
     await postVaaSolanaWithRetry(
       connection,
       wallet.signTransaction,
@@ -362,6 +406,8 @@ async function solana(
       Buffer.from(signedVAA),
       MAX_VAA_UPLOAD_RETRIES_SOLANA
     );
+    console.log("VAA Posted");
+
     const transaction = shouldUpdate
       ? await updateWrappedOnSolana(
           connection,
@@ -377,19 +423,24 @@ async function solana(
           payerAddress,
           signedVAA
         );
+    console.log("Transaction Created");
+
     const txid = await signSendAndConfirm(wallet, connection, transaction);
-    // TODO: didn't want to make an info call we didn't need, can we get the block without it by modifying the above call?
+    console.log("Transaction Confirmed:", txid);
+
     dispatch(setCreateTx({ id: txid, block: 1 }));
     enqueueSnackbar(null, {
       content: <Alert severity="success">Transaction confirmed</Alert>,
     });
   } catch (e) {
+    console.error("Error in Solana create wrapped process:", e);
     enqueueSnackbar(null, {
       content: <Alert severity="error">{parseError(e)}</Alert>,
     });
     dispatch(setIsCreating(false));
   }
 }
+
 
 async function terra(
   dispatch: any,

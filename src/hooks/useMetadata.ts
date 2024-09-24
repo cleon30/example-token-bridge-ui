@@ -12,7 +12,7 @@ import {
   TerraChainId,
   CHAIN_ID_SEI,
   CHAIN_ID_SUI,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { TokenInfo } from "@solana/spl-token-registry";
 import { useMemo } from "react";
 import { DataWrapper, getEmptyDataWrapper } from "../store/helpers";

@@ -40,11 +40,11 @@ import {
   transferNearFromNear,
   transferTokenFromNear,
   uint8ArrayToHex,
-} from "@certusone/wormhole-sdk";
-import { getOriginalPackageId } from "@certusone/wormhole-sdk/lib/cjs/sui";
-import { CHAIN_ID_NEAR } from "@certusone/wormhole-sdk/lib/esm";
-import { transferTokens } from "@certusone/wormhole-sdk/lib/esm/aptos/api/tokenBridge";
-import { getEmitterAddressAndSequenceFromResponseSui } from "@certusone/wormhole-sdk/lib/esm/sui";
+} from "@0xcleon/wormhole-sdk";
+import { getOriginalPackageId } from "@0xcleon/wormhole-sdk/lib/cjs/sui";
+import { CHAIN_ID_NEAR } from "@0xcleon/wormhole-sdk/lib/esm";
+import { transferTokens } from "@0xcleon/wormhole-sdk/lib/esm/aptos/api/tokenBridge";
+import { getEmitterAddressAndSequenceFromResponseSui } from "@0xcleon/wormhole-sdk/lib/esm/sui";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { calculateFee } from "@cosmjs/stargate";
 import { WalletStrategy } from "@injectivelabs/wallet-ts";
@@ -359,6 +359,15 @@ async function evm(
     const baseAmountParsed = parseUnits(amount, decimals);
     const feeParsed = parseUnits(relayerFee || "0", decimals);
     const transferAmountParsed = baseAmountParsed.add(feeParsed);
+    console.log("transferAmountParsed", transferAmountParsed);
+    console.log("feeParsed", feeParsed);
+    console.log("baseAmountParsed", baseAmountParsed);
+    console.log("isNative", isNative);
+    console.log("chainId", chainId);
+    console.log("recipientChain", recipientChain);
+    console.log("recipientAddress", recipientAddress);
+    console.log("originChain", originChain);
+    console.log("relayerFee", relayerFee);
     const additionalPayload = maybeAdditionalPayload(
       recipientChain,
       recipientAddress,
@@ -369,6 +378,7 @@ async function evm(
       chainId === CHAIN_ID_KLAYTN
         ? { gasPrice: (await signer.getGasPrice()).toString() }
         : {};
+    console.log("overrides", overrides);
     const receipt = isNative
       ? await transferFromEthNative(
           getTokenBridgeAddressForChain(chainId),
@@ -391,6 +401,7 @@ async function evm(
           overrides,
           additionalPayload?.payload
         );
+    console.log("receipt", receipt);
     dispatch(
       setTransferTx({ id: receipt.transactionHash, block: receipt.blockNumber })
     );
@@ -404,6 +415,8 @@ async function evm(
     const emitterAddress = getEmitterAddressEth(
       getTokenBridgeAddressForChain(chainId)
     );
+    console.log("chain id is", chainId);
+    console.log("emitterAddress is", emitterAddress);
     await fetchSignedVAA(
       chainId,
       emitterAddress,

@@ -2,7 +2,7 @@ import {
   ChainId,
   CHAIN_ID_ETH,
   CHAIN_ID_SOLANA,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Transaction } from "./transferSlice";
 

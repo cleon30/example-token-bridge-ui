@@ -15,7 +15,7 @@ import {
   isTerraChain,
   parseSmartContractStateResponse,
   terra,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { useWallet as useSeiWallet } from "@sei-js/react";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { useWallet } from "@suiet/wallet-kit";

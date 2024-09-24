@@ -1,4 +1,4 @@
-import { CHAIN_ID_SOLANA, isTerraChain } from "@certusone/wormhole-sdk";
+import { CHAIN_ID_SOLANA, isTerraChain } from "@0xcleon/wormhole-sdk";
 import { Alert } from "@material-ui/lab";
 import { Link, makeStyles } from "@material-ui/core";
 import { useMemo } from "react";

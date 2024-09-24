@@ -1,4 +1,4 @@
-import { ChainId, CHAIN_ID_AVAX, CHAIN_ID_ETH } from "@certusone/wormhole-sdk";
+import { ChainId, CHAIN_ID_AVAX, CHAIN_ID_ETH } from "@0xcleon/wormhole-sdk";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ParsedTokenAccount } from "./transferSlice";
 

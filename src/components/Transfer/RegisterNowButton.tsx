@@ -25,7 +25,7 @@ import {
   hexToNativeAssetString,
   CHAIN_ID_SEI,
   CHAIN_ID_SUI,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 
 export function RegisterNowButtonCore({
   originChain,

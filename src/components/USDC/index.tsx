@@ -10,7 +10,7 @@ import {
   parseVaa,
   tryUint8ArrayToNative,
   uint8ArrayToHex,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import {
   Container,
   FormControlLabel,

@@ -8,7 +8,7 @@ import {
   selectTransferSourceChain,
 } from "../store/selectors";
 import { WORMHOLE_RPC_HOSTS } from "../utils/consts";
-import { ChainId } from "@certusone/wormhole-sdk";
+import { ChainId } from "@0xcleon/wormhole-sdk";
 
 const REMAINING_NOTIONAL_TOLERANCE = 0.98;
 interface TokenListEntry {

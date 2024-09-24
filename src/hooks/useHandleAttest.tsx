@@ -38,9 +38,9 @@ import {
   parseSequenceFromLogTerra,
   parseSequenceFromLogXpla,
   uint8ArrayToHex,
-} from "@certusone/wormhole-sdk";
-import { getOriginalPackageId } from "@certusone/wormhole-sdk/lib/cjs/sui";
-import { getEmitterAddressAndSequenceFromResponseSui } from "@certusone/wormhole-sdk/lib/esm/sui";
+} from "@0xcleon/wormhole-sdk";
+import { getOriginalPackageId } from "@0xcleon/wormhole-sdk/lib/cjs/sui";
+import { getEmitterAddressAndSequenceFromResponseSui } from "@0xcleon/wormhole-sdk/lib/esm/sui";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { calculateFee } from "@cosmjs/stargate";
 import { WalletStrategy } from "@injectivelabs/wallet-ts";
@@ -121,6 +121,7 @@ import { getSuiProvider } from "../utils/sui";
 import { postWithFees, waitForTerraExecution } from "../utils/terra";
 import { postWithFeesXpla, waitForXplaExecution } from "../utils/xpla";
 import { attestFromSeiMsg, parseSequenceFromLogSei } from "../utils/sei";
+import { CHAIN_ID_ETH } from "@0xcleon/wormhole-sdk";
 
 async function algo(
   dispatch: any,
@@ -229,7 +230,6 @@ async function aptos(
     dispatch(setIsSending(false));
   }
 }
-
 async function evm(
   dispatch: any,
   enqueueSnackbar: any,
@@ -237,53 +237,75 @@ async function evm(
   sourceAsset: string,
   chainId: ChainId
 ) {
+  console.log("Starting EVM attest process");
+  console.log("Signer:", signer);
+  console.log("Source Asset:", sourceAsset);
+  console.log("Chain ID:", chainId);
+
   dispatch(setIsSending(true));
+
   try {
-    // Klaytn requires specifying gasPrice
+    console.log("Setting overrides for chain:", chainId);
     const overrides =
       chainId === CHAIN_ID_KLAYTN
         ? { gasPrice: (await signer.getGasPrice()).toString() }
         : {};
+    console.log("Overrides:", overrides);
+
+    console.log("Calling attestFromEth with signer and overrides");
     const receipt = await attestFromEth(
       getTokenBridgeAddressForChain(chainId),
       signer,
       sourceAsset,
       overrides
     );
+    console.log("Transaction receipt:", receipt);
+
     dispatch(
       setAttestTx({ id: receipt.transactionHash, block: receipt.blockNumber })
     );
+    console.log("Transaction confirmed, hash:", receipt.transactionHash);
+
     enqueueSnackbar(null, {
       content: <Alert severity="success">Transaction confirmed</Alert>,
     });
+
     const sequence = parseSequenceFromLogEth(
       receipt,
       getBridgeAddressForChain(chainId)
     );
+    console.log("Parsed sequence from log:", sequence);
+
     const emitterAddress = getEmitterAddressEth(
       getTokenBridgeAddressForChain(chainId)
     );
+    console.log("Emitter address:", emitterAddress);
+
     enqueueSnackbar(null, {
       content: <Alert severity="info">Fetching VAA</Alert>,
     });
+
     const { vaaBytes } = await getSignedVAAWithRetry(
       WORMHOLE_RPC_HOSTS,
       chainId,
       emitterAddress,
       sequence
     );
+    console.log("VAA fetched successfully");
+
     dispatch(setSignedVAAHex(uint8ArrayToHex(vaaBytes)));
     enqueueSnackbar(null, {
       content: <Alert severity="success">Fetched Signed VAA</Alert>,
     });
   } catch (e) {
-    console.error(e);
+    console.error("Error in EVM attest process:", e);
     enqueueSnackbar(null, {
       content: <Alert severity="error">{parseError(e)}</Alert>,
     });
     dispatch(setIsSending(false));
   }
 }
+
 
 async function near(
   dispatch: any,
@@ -346,7 +368,6 @@ async function near(
     dispatch(setIsSending(false));
   }
 }
-
 async function solana(
   dispatch: any,
   enqueueSnackbar: any,
@@ -354,9 +375,16 @@ async function solana(
   sourceAsset: string,
   wallet: WalletContextState
 ) {
+  console.log("Starting Solana attest process");
+  console.log("Public Key:", solPK.toString());
+  console.log("Source Asset:", sourceAsset);
+  
   dispatch(setIsSending(true));
+
   try {
     const connection = new Connection(SOLANA_HOST, "confirmed");
+    console.log("Creating attest transaction");
+    
     const transaction = await attestFromSolana(
       connection,
       SOL_BRIDGE_ADDRESS,
@@ -364,41 +392,56 @@ async function solana(
       solPK.toString(),
       sourceAsset
     );
+    console.log("Transaction created:", transaction);
+    
+    console.log("Signing and sending transaction");
     const txid = await signSendAndConfirm(wallet, connection, transaction);
+    console.log("Transaction confirmed, txid:", txid);
+    
     enqueueSnackbar(null, {
       content: <Alert severity="success">Transaction confirmed</Alert>,
     });
+
     const info = await connection.getTransaction(txid);
     if (!info) {
-      // TODO: error state
+      console.error("Error fetching transaction info");
       throw new Error("An error occurred while fetching the transaction info");
     }
+
     dispatch(setAttestTx({ id: txid, block: info.slot }));
+    console.log("Dispatching attest transaction with id:", txid);
+
     const sequence = parseSequenceFromLogSolana(info);
-    const emitterAddress = await getEmitterAddressSolana(
-      SOL_TOKEN_BRIDGE_ADDRESS
-    );
+    console.log("Parsed sequence from log:", sequence);
+
+    const emitterAddress = await getEmitterAddressSolana(SOL_TOKEN_BRIDGE_ADDRESS);
+    console.log("Emitter address:", emitterAddress);
+
     enqueueSnackbar(null, {
       content: <Alert severity="info">Fetching VAA</Alert>,
     });
+
     const { vaaBytes } = await getSignedVAAWithRetry(
       WORMHOLE_RPC_HOSTS,
       CHAIN_ID_SOLANA,
       emitterAddress,
       sequence
     );
+    console.log("VAA fetched successfully");
+
     dispatch(setSignedVAAHex(uint8ArrayToHex(vaaBytes)));
     enqueueSnackbar(null, {
       content: <Alert severity="success">Fetched Signed VAA</Alert>,
     });
   } catch (e) {
-    console.error(e);
+    console.error("Error in Solana attest process:", e);
     enqueueSnackbar(null, {
       content: <Alert severity="error">{parseError(e)}</Alert>,
     });
     dispatch(setIsSending(false));
   }
 }
+
 
 async function terra(
   dispatch: any,
@@ -691,6 +734,8 @@ export function useHandleAttest() {
   const disabled = !isTargetComplete || isSending || isSendComplete;
   const handleAttestClick = useCallback(() => {
     if (isEVMChain(sourceChain) && !!signer) {
+      console.log("sourceChain", sourceChain);
+      console.log("sourceAsset", sourceAsset);
       evm(dispatch, enqueueSnackbar, signer, sourceAsset, sourceChain);
     } else if (sourceChain === CHAIN_ID_SOLANA && !!solanaWallet && !!solPK) {
       solana(dispatch, enqueueSnackbar, solPK, sourceAsset, solanaWallet);

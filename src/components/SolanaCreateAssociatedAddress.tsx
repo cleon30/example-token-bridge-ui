@@ -5,7 +5,7 @@ import {
   hexToNativeAssetString,
   hexToNativeString,
   hexToUint8Array,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { Button, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import {
@@ -128,7 +128,7 @@ export default function SolanaCreateAssociatedAddress({
               payerPublicKey // payer
             )
           );
-          const { blockhash } = await connection.getRecentBlockhash();
+          const { blockhash } = await connection.getLatestBlockhash();
           transaction.recentBlockhash = blockhash;
           transaction.feePayer = new PublicKey(payerPublicKey);
           await signSendAndConfirm(solanaWallet, connection, transaction);
@@ -247,7 +247,7 @@ export function SolanaCreateAssociatedAddressAlternate() {
               payerPublicKey // payer
             )
           );
-          const { blockhash } = await connection.getRecentBlockhash();
+          const { blockhash } = await connection.getLatestBlockhash();
           transaction.recentBlockhash = blockhash;
           transaction.feePayer = new PublicKey(payerPublicKey);
           await signSendAndConfirm(solanaWallet, connection, transaction);

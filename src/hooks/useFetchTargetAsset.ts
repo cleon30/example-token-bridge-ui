@@ -26,11 +26,11 @@ import {
   CHAIN_ID_SEI,
   CHAIN_ID_SUI,
   getForeignAssetSui,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import {
   getForeignAssetEth as getForeignAssetEthNFT,
   getForeignAssetSol as getForeignAssetSolNFT,
-} from "@certusone/wormhole-sdk/lib/esm/nft_bridge";
+} from "@0xcleon/wormhole-sdk/lib/esm/nft_bridge";
 import { BigNumber } from "@ethersproject/bignumber";
 import { arrayify } from "@ethersproject/bytes";
 import { Connection } from "@solana/web3.js";

@@ -25,12 +25,12 @@ import {
   queryExternalIdInjective,
   uint8ArrayToHex,
   uint8ArrayToNative,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import {
   WormholeWrappedNFTInfo,
   getOriginalAssetEth as getOriginalAssetEthNFT,
   getOriginalAssetSol as getOriginalAssetSolNFT,
-} from "@certusone/wormhole-sdk/lib/esm/nft_bridge";
+} from "@0xcleon/wormhole-sdk/lib/esm/nft_bridge";
 import { Web3Provider } from "@ethersproject/providers";
 import { Connection } from "@solana/web3.js";
 import { LCDClient } from "@terra-money/terra.js";

@@ -10,7 +10,7 @@ import {
   ChainId,
   isEVMChain,
   isTerraChain,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { hexStripZeros, hexlify } from "@ethersproject/bytes";
 import { useWallet as useSeiWallet } from "@sei-js/react";
 import { useWallet as useSuiWallet } from "@suiet/wallet-kit";

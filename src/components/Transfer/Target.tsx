@@ -6,7 +6,7 @@ import {
   getEmitterAddressNear,
   hexToNativeString,
   isEVMChain,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { makeStyles, Typography } from "@material-ui/core";
 import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";

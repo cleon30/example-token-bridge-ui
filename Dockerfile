@@ -10,3 +10,8 @@ COPY bridge_ui/package.json bridge_ui/package-lock.json ./
 RUN --mount=type=cache,uid=1000,gid=1000,target=/home/node/.npm \
     npm ci
 COPY bridge_ui .
+
+# Add these lines to prepare the environment and start the development server
+ENV NODE_ENV=development
+EXPOSE 3000
+CMD ["npm", "start"]

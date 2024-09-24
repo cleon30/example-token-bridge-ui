@@ -4,7 +4,7 @@ import { FunctionCallOptions } from "near-api-js/lib/account";
 import {
   FinalExecutionOutcome,
   JsonRpcProvider,
-} from "@certusone/wormhole-sdk/node_modules/near-api-js/lib/providers"; //from "near-api-js/lib/providers";
+} from "@0xcleon/wormhole-sdk/node_modules/near-api-js/lib/providers"; //from "near-api-js/lib/providers";
 import { getNearConnectionConfig } from "./consts";
 
 export const makeNearAccount = async (senderAddr: string) =>

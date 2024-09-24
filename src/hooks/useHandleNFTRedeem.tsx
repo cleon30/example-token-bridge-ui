@@ -10,14 +10,14 @@ import {
   parseNFTPayload,
   parseVaa,
   postVaaSolanaWithRetry,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import {
   createMetaOnSolana,
   getForeignAssetSol,
   isNFTVAASolanaNative,
   redeemOnEth,
   redeemOnSolana,
-} from "@certusone/wormhole-sdk/lib/esm/nft_bridge";
+} from "@0xcleon/wormhole-sdk/lib/esm/nft_bridge";
 import { arrayify } from "@ethersproject/bytes";
 import { Alert } from "@material-ui/lab";
 import { WalletContextState } from "@solana/wallet-adapter-react";

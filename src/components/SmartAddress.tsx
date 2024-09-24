@@ -28,7 +28,7 @@ import {
   CHAIN_ID_OPTIMISM,
   CHAIN_ID_SEPOLIA,
   CHAIN_ID_SUI,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import { Button, makeStyles, Tooltip, Typography } from "@material-ui/core";
 import { FileCopy, OpenInNew } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";

@@ -5,7 +5,7 @@ import {
   hexToNativeAssetString,
   isEVMChain,
   isTerraChain,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import {
   Card,
   Checkbox,

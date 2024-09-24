@@ -2,7 +2,7 @@ import {
   ChainId,
   CHAIN_ID_ACALA,
   CHAIN_ID_KARURA,
-} from "@certusone/wormhole-sdk";
+} from "@0xcleon/wormhole-sdk";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
